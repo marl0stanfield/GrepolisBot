@@ -301,7 +301,16 @@ class AttackDodger {
         element.click();
       }
     );
+
     await this.utils.timeout(300 + this.utils.generateDelay());
+
+    // select barracks
+    this.utils.waitForElementToAppear(
+      "div > div.window_content.js-window-content > div > div.buttons > div.btn_confirm.button_new",
+      (element) => {
+        element.click();
+      }
+    );
   }
 
   async sendAllUnits() {
@@ -406,7 +415,6 @@ class AttackDodger {
     const dodgeTo = localStorage.getItem(dodgeFromTown);
     let dodgeObj = JSON.parse(dodgeTo);
 
-    this.villagerDef();
     await this.utils.timeout(1488 + this.utils.generateDelay());
 
     // select town to dodge from
@@ -444,6 +452,10 @@ class AttackDodger {
         foundDiv.click();
       }
     );
+
+    await this.villagerDef();
+
+    await this.utils.timeout(200 + this.utils.generateDelay());
 
     // click raned
 
@@ -568,7 +580,7 @@ class AttackDodger {
     }
 
     const mutationObserver = new MutationObserver((mutations) => {
-
+      setTimeout(() => {
         if (mutations[2].type === "childList") {
           if (
             parseInt(
@@ -592,14 +604,18 @@ class AttackDodger {
             console.log("No Attacks");
           }
         }
-    
+      }, 5000);
     });
 
     const activity = document.querySelector(
       "#ui_box > div.tb_activities.toolbar_activities > div.middle > div:nth-child(1) > div.activity.attack_indicator"
     );
 
-    mutationObserver.observe(activity, { childList: true, subtree: true });
+    mutationObserver.observe(activity, {
+      childList: true,
+      subtree: true,
+      attributes: true,
+    });
   }
 }
 "use strict";
