@@ -1,0 +1,981 @@
+"use strict";
+
+class AutoCulture {
+  constructor() {
+    this.utils = new Utils();
+  }
+
+  async selectOverview() {
+    this.utils.waitForElementToAppear(
+      "#overviews_link_hover_menu > div.box.middle.left > div > div > ul > li.subsection.curator.enabled > ul > li.culture_overview > a",
+      (element) => {
+        element.click();
+      }
+    );
+    await this.utils.timeout(658 + this.utils.generateDelay());
+  }
+
+  async confirm() {
+    this.utils.waitForElementToAppear("#start_all_celebrations", (element) => {
+      element.click();
+    });
+    await this.utils.timeout(1001 + this.utils.generateDelay());
+  }
+
+  async close() {
+    this.utils.waitForElementToAppear(
+      "body > div.ui-dialog.ui-corner-all.ui-widget.ui-widget-content.ui-front.ui-draggable.js-window-main-container > div.ui-dialog-titlebar.ui-corner-all.ui-widget-header.ui-helper-clearfix.ui-draggable-handle > button",
+      (element) => {
+        element.click();
+      }
+    );
+    await this.utils.timeout(1488 + this.utils.generateDelay());
+  }
+
+  async selectOption(opt) {
+    let num = 1;
+    switch (opt) {
+      case "Mestský festival":
+        num = 1;
+        break;
+      case "Olympijské hry":
+        num = 2;
+        break;
+      case "Víťazná procesia":
+        num = 3;
+        break;
+      case "Divadelné hry":
+        num = 4;
+        break;
+    }
+
+    this.utils.waitForElementToAppear(
+      "#place_celebration_select",
+      (element) => {
+        element.click();
+      }
+    );
+    await this.utils.timeout(1488 + this.utils.generateDelay());
+
+    this.utils.waitForElementToAppear(
+      "#place_celebration_select_list > div > div:nth-child(" + num + ")",
+      (element) => {
+        element.click();
+      }
+    );
+    await this.utils.timeout(1488 + this.utils.generateDelay());
+  }
+
+  async repeatCulture(opt) {
+    await this.selectOverview();
+    await this.selectOption(opt);
+    await this.confirm();
+    await this.close();
+    console.log("Culture is being runned.");
+  }
+
+  async run(opt, time) {
+    console.log(time);
+    const seconds = this.utils.convertToSeconds(time);
+    console.log(seconds);
+    this.seconds = seconds;
+
+    await this.repeatCulture(opt);
+
+    let delay =
+      this.seconds * 1000 +
+      Math.floor(Math.random() * (900000 - 180000) + 120000);
+    console.log(delay);
+  }
+}
+"use strict";
+
+class AutoFarm {
+  constructor() {
+    this.utils = new Utils();
+  }
+
+  async selectVillages() {
+    const linkElement = document.querySelector(
+      "#overviews_link_hover_menu > div.box.middle.left > div > div > ul > li.subsection.captain.enabled > ul > li.farm_town_overview > a"
+    );
+
+    function triggerClickEvent(target) {
+      const clickEvent = new MouseEvent("click", {
+        view: window,
+        bubbles: true,
+        cancelable: true,
+      });
+      target.dispatchEvent(clickEvent);
+    }
+
+    triggerClickEvent(linkElement);
+    await this.utils.timeout(889 + this.utils.generateDelay());
+  }
+
+  async selectAll() {
+    this.utils.waitForElementToAppear(
+      "#fto_town_wrapper > div > div.game_header.bold > span.checkbox_wrapper > a",
+      (element) => {
+        element.click();
+      }
+    );
+    await this.utils.timeout(798 + this.utils.generateDelay());
+  }
+
+  async checkTime(seconds) {
+    if (
+      seconds === 300 ||
+      seconds === 1200 ||
+      seconds === 5400 ||
+      seconds === 14400
+    ) {
+        this.utils.waitForElementToAppear(
+        "#time_options_wrapper > div.time_options_default > div.fto_time_checkbox.fto_" +
+          seconds +
+          "> a",
+        (element) => {
+          element.click();
+        }
+      );
+    } else {
+        this.utils.waitForElementToAppear(
+        "#time_options_wrapper > div.time_options_loyalty > div.fto_time_checkbox.fto_" +
+          seconds +
+          " > a",
+        (element) => {
+          element.click();
+        }
+      );
+    }
+    await this.utils.timeout(805 + this.utils.generateDelay());
+  }
+
+  async collect() {
+    this.utils.waitForElementToAppear(
+      "#fto_claim_button > div.caption.js-caption",
+      (element) => {
+        element.click();
+      }
+    );
+    await this.utils.timeout(985);
+  }
+
+  async confirm() {
+    this.utils.waitForElementToAppear(
+      ".window_content.js-window-content > div > div.buttons > div.btn_confirm.button_new > div.caption.js-caption",
+      (element) => {
+        element.click();
+      }
+    );
+    await this.utils.timeout(1188 + this.utils.generateDelay());
+  }
+
+  async close() {
+    this.utils.waitForElementToAppear(
+      "body > div.ui-dialog.ui-corner-all.ui-widget.ui-widget-content.ui-front.ui-draggable.js-window-main-container > div.ui-dialog-titlebar.ui-corner-all.ui-widget-header.ui-helper-clearfix.ui-draggable-handle > button",
+      (element) => {
+        element.click();
+      }
+    );
+    await this.utils.timeout(1205 + this.utils.generateDelay());
+  }
+
+  async repeatFarm() {
+    await this.selectVillages();
+    await this.selectAll();
+    await this.checkTime(this.seconds);
+    await this.collect();
+    await this.confirm();
+    await this.close();
+    console.log("Collecting is finished");
+  }
+
+  async run(time) {
+    console.log(time);
+    const seconds = this.utils.convertToSeconds(time);
+    console.log(seconds);
+    this.seconds = seconds;
+
+    while (true) {
+      await this.repeatFarm();
+
+      let delay =
+        this.seconds * 1000 + Math.floor(Math.random() * (30000 - 5000) + 5000);
+      console.log(delay);
+      await this.utils.timeout(delay);
+    }
+    //await this.repeatFarm();
+
+    //setInterval(this.myFunction, 1000);
+  }
+}
+"use strict";
+
+class Utils {
+  timeout(delay) {
+    return new Promise((r) => setTimeout(r, delay));
+  }
+
+  generateDelay() {
+    return Math.floor(Math.random() * (601 - 300) + 300);
+  }
+
+  convertToSeconds(timeString) {
+    const [hours, minutes, seconds] = timeString.split(":");
+    const totalSeconds =
+      parseInt(hours) * 3600 + parseInt(minutes) * 60 + parseInt(seconds);
+    return totalSeconds;
+  }
+
+  waitForElementToAppear(selector, callback, interval = 100, maxAttempts = 10) {
+    var attempts = 0;
+    var timer = setInterval(function () {
+      attempts++;
+      var element = document.querySelector(selector);
+      if (element || attempts >= maxAttempts) {
+        clearInterval(timer);
+        if (element) {
+          callback(element);
+        } else {
+          console.log("Element not found within the specified time.");
+        }
+      }
+    }, interval);
+  }
+}
+class AttackDodger {
+  constructor() {
+    this.utils = new Utils();
+    this.attackCount = 0;
+  }
+
+  async getListOfAttacks() {
+    this.utils.waitForElementToAppear(
+      "#toolbar_activity_commands",
+      (element) => {
+        element.click();
+      }
+    );
+    await this.utils.timeout(3877 + this.utils.generateDelay());
+    await this.getIncomingAttacks();
+  }
+
+  async parseTimeAndTown(attackInfo) {
+    let dodgeFromTown = attackInfo.children[1].children[3].innerHTML;
+    console.log(dodgeFromTown);
+    let dodgeIn = attackInfo.children[7].innerHTML;
+    console.log(dodgeIn);
+    const [hours, minutes, seconds] = dodgeIn.split(":").map(Number);
+
+    // Calculate the total seconds
+    const totalSeconds = hours * 3600 + minutes * 60 + seconds;
+
+    console.log(totalSeconds);
+
+    setTimeout(async () => {
+      await this.makeDodge(dodgeFromTown);
+    }, 5000);
+  }
+
+  async villagerDef() {
+    // click on town overview
+    this.utils.waitForElementToAppear(
+      "#ui_box > div.topleft_navigation_area > div.bull_eye_buttons > div.rb_map > div.option.city_overview.circle_button.js-option",
+      (element) => {
+        element.click();
+      }
+    );
+    await this.utils.timeout(300 + this.utils.generateDelay());
+
+    // select farm
+    this.utils.waitForElementToAppear("#building_main_area_farm", (element) => {
+      element.click();
+    });
+    await this.utils.timeout(300 + this.utils.generateDelay());
+
+    // select barracks
+    this.utils.waitForElementToAppear(
+      "#request_militia_button > span.left > span > span",
+      (element) => {
+        element.click();
+      }
+    );
+    await this.utils.timeout(300 + this.utils.generateDelay());
+  }
+
+  async sendAllUnits() {
+    // send all ships
+    this.utils.waitForElementToAppear(
+      "div > form > div.town_units_wrapper > div > div.unit_wrapper > div.naval_units.clearfix > div",
+      (element) => {
+        const divElements = document.querySelectorAll(
+          "div > form > div.town_units_wrapper > div > div.unit_wrapper > div.naval_units.clearfix > div"
+        );
+        for (const divElement of divElements) {
+          divElement.childNodes[1].click();
+        }
+      }
+    );
+
+    await this.utils.timeout(1488 + this.utils.generateDelay());
+    // send all ships
+    this.utils.waitForElementToAppear(
+      "div > form > div.button_wrapper > a > span.left > span > span",
+      (element) => {
+        element.click();
+      }
+    );
+    await this.utils.timeout(1488 + this.utils.generateDelay());
+
+    // send all troops
+    this.utils.waitForElementToAppear(
+      "div > form > div.town_units_wrapper > div > div.unit_wrapper > div.ground_units.clearfix > div",
+      (element) => {
+        const divElements = document.querySelectorAll(
+          "div > form > div.town_units_wrapper > div > div.unit_wrapper > div.ground_units.clearfix > div"
+        );
+        for (const divElement of divElements) {
+          divElement.childNodes[1].click();
+        }
+      }
+    );
+    await this.utils.timeout(1488 + this.utils.generateDelay());
+
+    // send all troops
+    this.utils.waitForElementToAppear(
+      "div > form > div.button_wrapper > a > span.left > span > span",
+      (element) => {
+        element.click();
+      }
+    );
+    await this.utils.timeout(10000 + this.utils.generateDelay());
+  }
+
+  async closeAll() {
+    const closeButtons = document.querySelectorAll(
+      "body > div.ui-dialog.ui-corner-all.ui-widget.ui-widget-content.ui-front.ui-draggable.ui-resizable.js-window-main-container > div.ui-dialog-titlebar.ui-corner-all.ui-widget-header.ui-helper-clearfix.ui-draggable-handle > button"
+    );
+
+    for (const button of closeButtons) {
+      button.click();
+    }
+
+    await this.utils.timeout(200 + this.utils.generateDelay());
+
+    const closeButtonsNext = document.querySelectorAll(
+      "body > div > div.ui-dialog-titlebar.ui-corner-all.ui-widget-header.ui-helper-clearfix.ui-draggable-handle > button"
+    );
+
+    for (const button of closeButtonsNext) {
+      button.click();
+    }
+  }
+
+  simulateHover(element) {
+    const hoverEvent = new MouseEvent("mouseover", {
+      bubbles: true,
+      cancelable: true,
+      view: window,
+    });
+
+    element.dispatchEvent(hoverEvent);
+  }
+
+  async cancelSendingUnits() {
+    console.log("canceling");
+
+    const elementToHover = document.querySelector(
+      "#ui_box > div.tb_activities.toolbar_activities > div.middle > div:nth-child(5) > div.activity.commands > div.hover_state"
+    );
+
+    this.simulateHover(elementToHover);
+
+    const divElements = document.querySelectorAll(
+      "div > div.button_new.square.remove.js-delete.cancelable"
+    );
+    for (const divElement of divElements) {
+      divElement.click();
+    }
+
+    await this.utils.timeout(1488 + this.utils.generateDelay());
+  }
+
+  async makeDodge(dodgeFromTown) {
+    console.log("Hello i was called after 10 seconds");
+    const dodgeTo = localStorage.getItem(dodgeFromTown);
+    let dodgeObj = JSON.parse(dodgeTo);
+
+    this.villagerDef();
+    await this.utils.timeout(1488 + this.utils.generateDelay());
+
+    // select town to dodge from
+    this.utils.waitForElementToAppear(
+      "#ui_box > div.town_name_area > div.town_groups_dropdown.btn_toggle_town_groups_menu > div.caption.js-viewport",
+      (element) => {
+        element.click();
+      }
+    );
+
+    await this.utils.timeout(1488 + this.utils.generateDelay());
+
+    const findDivByInnerText = (innerTextToFind, selector) => {
+      const divElements = document.querySelectorAll(selector);
+
+      for (const divElement of divElements) {
+        if (divElement.innerText === innerTextToFind) {
+          return divElement;
+        }
+      }
+
+      return null;
+    };
+
+    await this.utils.timeout(1488 + this.utils.generateDelay());
+    // click town name
+    this.utils.waitForElementToAppear(
+      "#town_groups_list > div.content.js-dropdown-item-list.town_groups_list > div.town_group.town_group_-1.selected > div.group_towns.ui-droppable > div > span",
+      () => {
+        const foundDiv = findDivByInnerText(
+          dodgeFromTown,
+          "#town_groups_list > div.content.js-dropdown-item-list.town_groups_list > div.town_group.town_group_-1.selected > div.group_towns.ui-droppable > div > span"
+        );
+        console.log(foundDiv);
+        foundDiv.click();
+      }
+    );
+
+    // click raned
+
+    this.utils.waitForElementToAppear(
+      "#ui_box > div.nui_main_menu > div.middle > div.content > ul > li.ranking.main_menu_item",
+      (element) => {
+        element.click();
+      }
+    );
+
+    await this.utils.timeout(1488 + this.utils.generateDelay());
+
+    this.utils.waitForElementToAppear("#player_name", (element) => {
+      console.log(dodgeObj);
+      element.value = dodgeObj.pname;
+    });
+
+    await this.utils.timeout(1488 + this.utils.generateDelay());
+
+    this.utils.waitForElementToAppear(
+      "#ranking_search > a.button > span.left > span > span",
+      (element) => {
+        element.click();
+      }
+    );
+
+    await this.utils.timeout(1488 + this.utils.generateDelay());
+
+    this.utils.waitForElementToAppear(
+      "#ranking_inner > tr.game_table_even.bottom > td.r_name > a",
+      (element) => {
+        element.click();
+      }
+    );
+
+    await this.utils.timeout(1488 + this.utils.generateDelay());
+
+    this.utils.waitForElementToAppear(
+      "#player_towns > div > ul > li > a",
+      () => {
+        const elements = document.querySelectorAll(
+          "#player_towns > div > ul > li > a"
+        );
+        console.log(elements);
+        for (const element of elements) {
+          console.log(element.innerText);
+          if (element.innerText === dodgeObj.tname) {
+            element.click();
+          }
+        }
+      }
+    );
+
+    await this.utils.timeout(1488 + this.utils.generateDelay());
+
+    this.utils.waitForElementToAppear("#support", (element) => {
+      element.click();
+    });
+
+    await this.utils.timeout(1488 + this.utils.generateDelay());
+
+    await this.sendAllUnits();
+    await this.cancelSendingUnits();
+    await this.closeAll();
+  }
+
+  filterAttacks(doc) {
+    const rootElement = doc.documentElement;
+
+    for (let i = 0; i < rootElement.children.length; i++) {
+      const childElement = rootElement.children[i];
+
+      if (childElement.tagName === "BODY") {
+        for (let j = 0; j < childElement.children.length; j++) {
+          const childElementList = childElement.children[j];
+          let type = childElementList.attributes[2].value;
+          if (type === "attack_land" || type === "attack_sea") {
+            console.log(childElementList);
+            console.log(
+              childElementList.children[0].children[1].children[2].attributes[0]
+                .value
+            );
+            if (
+              childElementList.children[0].children[1].children[2].attributes[0]
+                .value === "overview_outgoing icon"
+            ) {
+              this.parseTimeAndTown(childElementList.children[0]);
+            }
+          }
+        }
+      }
+    }
+  }
+
+  async getIncomingAttacks() {
+    this.utils.waitForElementToAppear("#command_overview", (element) => {
+      element.click();
+    });
+    //await this.utils.timeout(3877 + this.utils.generateDelay());
+    let content = document.querySelector("#command_overview");
+    console.log(content.innerHTML);
+    let myDoc = new DOMParser().parseFromString(content.innerHTML, "text/html");
+    console.log(myDoc);
+    this.filterAttacks(myDoc);
+
+    const now = new Date();
+    const day = now.getDay(); // returns a number representing the day of the week, starting with 0 for Sunday
+    const hours = now.getHours();
+    const minutes = now.getMinutes();
+    const seconds = now.getSeconds();
+    console.log(day + ":" + hours + ":" + minutes + ":" + seconds);
+  }
+
+  run() {
+    const attackCount = document.querySelector(
+      "#ui_box > div.tb_activities.toolbar_activities > div.middle > div:nth-child(1) > div.activity.attack_indicator > div.hover_state > div > div"
+    );
+
+    if (attackCount.innerText !== "") {
+      this.attackCount = parseInt(attackCount.innerText);
+      console.log("Attack count: " + this.attackCount);
+    }
+
+    const mutationObserver = new MutationObserver((mutations) => {
+
+        if (mutations[2].type === "childList") {
+          if (
+            parseInt(
+              mutations[2].addedNodes[1].childNodes[1].firstElementChild
+                .innerText
+            ) > this.attackCount
+          ) {
+            this.attackCount++;
+            console.log("Attack detected");
+            this.getListOfAttacks();
+          } else if (
+            parseInt(
+              mutations[2].addedNodes[1].childNodes[1].firstElementChild
+                .innerText
+            ) < this.attackCount
+          ) {
+            this.attackCount--;
+            console.log("Attack canceled");
+          } else {
+            this.attackCount = 0;
+            console.log("No Attacks");
+          }
+        }
+    
+    });
+
+    const activity = document.querySelector(
+      "#ui_box > div.tb_activities.toolbar_activities > div.middle > div:nth-child(1) > div.activity.attack_indicator"
+    );
+
+    mutationObserver.observe(activity, { childList: true, subtree: true });
+  }
+}
+"use strict";
+class DodgeUI {
+  constructor(mainDiv) {
+    this.mainDiv = mainDiv;
+    this.readOnlyInput = null;
+  }
+
+  createHeading() {
+    const heading = document.createElement("h3");
+    heading.textContent = "AttackDodger";
+    heading.style.color = "Red";
+    return heading;
+  }
+
+  createStart(text) {
+    const button = document.createElement("button");
+    button.textContent = text;
+
+    button.addEventListener("click", function () {
+      let ad = new AttackDodger();
+      ad.run();
+    });
+
+    return button;
+  }
+
+  createSubmit(text) {
+    const button = document.createElement("button");
+    button.textContent = text;
+
+    button.addEventListener("click", function () {
+      const townNameSelector = document.querySelector(
+        "#ui_box > div.town_name_area > div.town_groups_dropdown.btn_toggle_town_groups_menu > div.caption.js-viewport > div"
+      );
+
+      const playerNameInput = document.getElementById("playerNameInput");
+      const townNameInput = document.getElementById("townNameInput");
+
+      const playerName = playerNameInput.value;
+      const townName = townNameInput.value;
+
+      console.log(townNameSelector.textContent + " is doding to");
+      console.log("Player Name:", playerName);
+      console.log("Town Name:", townName);
+
+      const dodgeObj = { pname: playerName, tname: townName };
+      console.log(dodgeObj);
+      const dodgeObjString = JSON.stringify(dodgeObj);
+      localStorage.setItem(townNameSelector.textContent, dodgeObjString);
+    });
+
+    return button;
+  }
+
+  createAutoDodgeeDiv(name) {
+    const autoDodgeDiv = document.createElement("div");
+    autoDodgeDiv.className = name;
+    return autoDodgeDiv;
+  }
+
+  isJsonString(str) {
+    try {
+      JSON.parse(str);
+      return true;
+    } catch (e) {
+      return false;
+    }
+  }
+
+  refreshDodgeInfo() {
+    const townNameSelector = document.querySelector(
+      "#ui_box > div.town_name_area > div.town_groups_dropdown.btn_toggle_town_groups_menu > div.caption.js-viewport > div"
+    );
+
+    let item = localStorage.getItem(townNameSelector.textContent);
+    if (item === null || !this.isJsonString(item)) {
+      this.readOnlyInput.value = "";
+      return;
+    }
+    let dodgeObj = JSON.parse(item);
+
+    this.readOnlyInput.value = dodgeObj.tname + " : " + dodgeObj.pname;
+  }
+
+  createDodgeUI() {
+    const heading = this.createHeading();
+
+    const startDodging = this.createStart("Start");
+    startDodging.style.display = "block";
+    startDodging.style.justifyContent = "center";
+    startDodging.style.margin = "auto";
+
+    const submit = this.createSubmit("Submit");
+
+    const playerNameInput = document.createElement("input");
+    const townNameInput = document.createElement("input");
+    this.readOnlyInput = document.createElement("input");
+
+    // Set attributes for the input elements
+    playerNameInput.type = "text";
+    townNameInput.type = "text";
+
+    this.readOnlyInput.type = "text";
+    this.readOnlyInput.readOnly = true;
+    this.refreshDodgeInfo();
+
+    const arrowRight = document.querySelector(
+      "#ui_box > div.town_name_area > div.btn_next_town.button_arrow.right"
+    );
+
+    const arrowLeft = document.querySelector(
+      "#ui_box > div.town_name_area > div.btn_prev_town.button_arrow.left"
+    );
+
+    arrowRight.addEventListener("click", () => {
+      this.refreshDodgeInfo();
+    });
+
+    arrowLeft.addEventListener("click", () => {
+      this.refreshDodgeInfo();
+    });
+
+    // Placeholder text for the inputs
+    playerNameInput.placeholder = "Enter Player Name";
+    townNameInput.placeholder = "Enter Town Name";
+    this.readOnlyInput.placeholder = "Not set";
+
+    this.mainDiv.appendChild(heading);
+
+    submit.style.margin = "auto";
+    submit.style.display = "block";
+    submit.style.justifyContent = "center";
+
+    playerNameInput.setAttribute("id", "playerNameInput");
+    townNameInput.setAttribute("id", "townNameInput");
+
+    // Append the inputs to the mainDiv
+    this.mainDiv.appendChild(playerNameInput);
+    this.mainDiv.appendChild(townNameInput);
+    this.mainDiv.appendChild(submit);
+    this.mainDiv.appendChild(this.readOnlyInput);
+
+    const buttonContainer = document.createElement("div");
+    buttonContainer.className = "button-container";
+    buttonContainer.appendChild(startDodging);
+    this.mainDiv.appendChild(buttonContainer);
+  }
+}
+"use strict";
+class CultureUI {
+  constructor(mainDiv) {
+    this.mainDiv = mainDiv;
+  }
+
+  createHeading() {
+    const heading = document.createElement("h3");
+    heading.textContent = "AutoCulture";
+    heading.style.color = "Yellow";
+    return heading;
+  }
+
+  createDropDown(optionValues, name) {
+    const dropDown = document.createElement("select");
+    dropDown.setAttribute("name", name);
+
+    for (let i = 0; i < optionValues.length; i++) {
+      const option = document.createElement("option");
+      option.text = optionValues[i];
+      dropDown.appendChild(option);
+    }
+
+    return dropDown;
+  }
+
+  createButton() {
+    const button = document.createElement("button");
+    button.textContent = "Start";
+
+    button.addEventListener("click", function () {
+      let ac = new AutoCulture();
+      const dropDown = document.querySelector(
+        "select[name='culture-drop-down']"
+      );
+      const optDropDown = document.querySelector(
+        "select[name='option-drop-down']"
+      );
+      const selectedValue = dropDown.value;
+      const selectedOption = optDropDown.value;
+      console.log(selectedOption);
+      ac.run(selectedOption, selectedValue);
+    });
+
+    return button;
+  }
+
+  createAutoCultureDiv(name) {
+    const autoFarmDiv = document.createElement("div");
+    autoFarmDiv.className = name;
+    return autoFarmDiv;
+  }
+
+  createCultureUI() {
+    const optionValues = [
+      "Mestský festival",
+      "Olympijské hry",
+      "Víťazná procesia",
+      "Divadelné hry",
+    ];
+
+    const optionValues1 = [
+      "02:00:00",
+      "04:00:00",
+      "08:00:00",
+      "10:00:00",
+      "11:00:00",
+      "12:00:00",
+    ];
+
+    const heading = this.createHeading();
+    const dropDown = this.createDropDown(optionValues, "option-drop-down");
+    const dropDown1 = this.createDropDown(optionValues1, "culture-drop-down");
+    const button = this.createButton();
+    const autoCultureDiv = this.createAutoCultureDiv("auto-culture-options");
+    const autoCultureDiv1 = this.createAutoCultureDiv("auto-culture-timer");
+
+    autoCultureDiv.appendChild(dropDown);
+
+    autoCultureDiv1.appendChild(dropDown1);
+    autoCultureDiv1.appendChild(button);
+
+    this.mainDiv.appendChild(heading);
+    this.mainDiv.appendChild(autoCultureDiv);
+    this.mainDiv.appendChild(autoCultureDiv1);
+  }
+}
+"use strict";
+class FarmUI {
+  constructor(mainDiv) {
+    this.mainDiv = mainDiv;
+  }
+
+  createHeading() {
+    const heading = document.createElement("h3");
+    heading.textContent = "AutoFarm";
+    heading.style.color = "green";
+    return heading;
+  }
+
+  createDropDown() {
+    const dropDown = document.createElement("select");
+    dropDown.setAttribute("name", "farm-drop-down");
+
+    const optionValues = [
+      "00:05:00",
+      "00:10:00",
+      "00:20:00",
+      "00:40:00",
+      "01:30:00",
+      "03:00:00",
+      "04:00:00",
+      "08:00:00",
+    ];
+
+    for (let i = 0; i < optionValues.length; i++) {
+      const option = document.createElement("option");
+      option.text = optionValues[i];
+      dropDown.appendChild(option);
+    }
+
+    return dropDown;
+  }
+
+  createButton() {
+    const button = document.createElement("button");
+    button.textContent = "Start";
+
+    button.addEventListener("click", function () {
+      let af = new AutoFarm();
+      const dropDown = document.querySelector("select[name='farm-drop-down']");
+      const selectedValue = dropDown.value;
+      af.run(selectedValue);
+    });
+
+    return button;
+  }
+
+  createAutoFarmDiv() {
+    const autoFarmDiv = document.createElement("div");
+    autoFarmDiv.className = "auto-farm";
+    return autoFarmDiv;
+  }
+
+  createFarmUI() {
+    const heading = this.createHeading();
+    const dropDown = this.createDropDown();
+    const button = this.createButton();
+    const autoFarmDiv = this.createAutoFarmDiv();
+
+    autoFarmDiv.appendChild(dropDown);
+    autoFarmDiv.appendChild(button);
+
+    this.mainDiv.appendChild(heading);
+    this.mainDiv.appendChild(autoFarmDiv);
+  }
+}
+"use strict";
+
+class MainUI {
+  constructor() {
+    this.panel = document.getElementsByClassName(
+      "ui_construction_queue instant_buy"
+    )[0];
+    this.createMainDiv();
+    this.addDragFunctionality();
+    this.createAutoFarmUI();
+  }
+
+  createMainDiv() {
+    this.mainDiv = document.createElement("div");
+    this.mainDiv.setAttribute("name", "bot-main-div");
+    this.mainDiv.style.position = "absolute";
+    this.mainDiv.style.left = "0px";
+    this.mainDiv.style.top = "0px";
+    this.mainDiv.style.width = "300px";
+    this.mainDiv.style.height = "500px";
+    this.mainDiv.style.backgroundColor = "rgba(0, 0, 10, 0.5)";
+    this.mainDiv.style.zIndex = "1000";
+    this.mainDiv.style.borderRadius = "10px";
+    let parentDiv = this.panel.parentNode;
+    parentDiv.insertBefore(this.mainDiv, this.panel);
+  }
+
+  addDragFunctionality() {
+    let isDragging = false;
+    let dragOffsetX = 0;
+    let dragOffsetY = 0;
+
+    const startDrag = (event) => {
+      isDragging = true;
+      dragOffsetX = event.clientX - this.mainDiv.offsetLeft;
+      dragOffsetY = event.clientY - this.mainDiv.offsetTop;
+    };
+
+    const endDrag = () => {
+      isDragging = false;
+    };
+
+    const drag = (event) => {
+      if (isDragging) {
+        this.mainDiv.style.left = event.clientX - dragOffsetX + "px";
+        this.mainDiv.style.top = event.clientY - dragOffsetY + "px";
+      }
+    };
+
+    this.mainDiv.addEventListener("mousedown", startDrag);
+    this.mainDiv.addEventListener("mouseup", endDrag);
+    this.mainDiv.addEventListener("mousemove", drag);
+  }
+
+  createAutoFarmUI() {
+    let farm = new FarmUI(this.mainDiv);
+    farm.createFarmUI();
+    let culture = new CultureUI(this.mainDiv);
+    culture.createCultureUI();
+    let dodge = new DodgeUI(this.mainDiv);
+    dodge.createDodgeUI();
+  }
+}
+"use strict";
+
+(function () {
+  window.addEventListener("load", function () {
+    setTimeout(function () {
+      new MainUI();
+    }, 2000); // 2000 milliseconds = 2 seconds delay
+  });
+})();

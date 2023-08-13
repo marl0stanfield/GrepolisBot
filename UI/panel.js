@@ -57,5 +57,7 @@ class MainUI {
     farm.createFarmUI();
     let culture = new CultureUI(this.mainDiv);
     culture.createCultureUI();
+    let dodge = new DodgeUI(this.mainDiv);
+    dodge.createDodgeUI();
   }
 }
