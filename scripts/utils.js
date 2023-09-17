@@ -6,7 +6,7 @@ class Utils {
   }
 
   generateDelay() {
-    return Math.floor(Math.random() * (601 - 300) + 300);
+    return Math.floor(Math.random() * (4310 - 2000) + 2000);
   }
 
   convertToSeconds(timeString) {

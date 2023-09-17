@@ -60,6 +60,7 @@ class CultureUI {
     ];
 
     const optionValues1 = [
+      "01:00:00",
       "02:00:00",
       "04:00:00",
       "08:00:00",

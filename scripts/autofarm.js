@@ -20,7 +20,7 @@ class AutoFarm {
     }
 
     triggerClickEvent(linkElement);
-    await this.utils.timeout(889 + this.utils.generateDelay());
+    await this.utils.timeout(200 + this.utils.generateDelay());
   }
 
   async selectAll() {
@@ -30,7 +30,7 @@ class AutoFarm {
         element.click();
       }
     );
-    await this.utils.timeout(798 + this.utils.generateDelay());
+    await this.utils.timeout(1547 + this.utils.generateDelay());
   }
 
   async checkTime(seconds) {
@@ -58,7 +58,7 @@ class AutoFarm {
         }
       );
     }
-    await this.utils.timeout(805 + this.utils.generateDelay());
+    await this.utils.timeout(1550 + this.utils.generateDelay());
   }
 
   async collect() {
@@ -68,7 +68,7 @@ class AutoFarm {
         element.click();
       }
     );
-    await this.utils.timeout(985);
+    await this.utils.timeout(2200);
   }
 
   async confirm() {
@@ -78,7 +78,7 @@ class AutoFarm {
         element.click();
       }
     );
-    await this.utils.timeout(1188 + this.utils.generateDelay());
+    await this.utils.timeout(2188 + this.utils.generateDelay());
   }
 
   async close() {

@@ -23,13 +23,13 @@ class AttackDodger {
     const [hours, minutes, seconds] = dodgeIn.split(":").map(Number);
 
     // Calculate the total seconds
-    const totalSeconds = hours * 3600 + minutes * 60 + seconds;
+    const totalSeconds = (hours * 3600) + (minutes * 60) + seconds;
 
     console.log(totalSeconds);
 
     setTimeout(async () => {
       await this.makeDodge(dodgeFromTown);
-    }, 5000);
+    }, (totalSeconds*1000) - 40000);
   }
 
   async villagerDef() {
@@ -161,7 +161,7 @@ class AttackDodger {
       divElement.click();
     }
 
-    await this.utils.timeout(1488 + this.utils.generateDelay());
+    await this.utils.timeout(888 + this.utils.generateDelay());
   }
 
   async makeDodge(dodgeFromTown) {
