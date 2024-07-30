@@ -309,7 +309,7 @@ class AttackDodger {
       element.click();
     });
     //await this.utils.timeout(3877 + this.utils.generateDelay());
-    let content = document.querySelector("#command_overview");
+    let content = document.getElementsByClassName("command_overview");
     console.log(content.innerHTML);
     let myDoc = new DOMParser().parseFromString(content.innerHTML, "text/html");
     console.log(myDoc);
