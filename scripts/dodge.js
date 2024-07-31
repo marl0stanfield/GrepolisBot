@@ -336,10 +336,10 @@ class AttackDodger {
     const mutations =;
     const mutationObserver = new MutationObserver((mutations) => {
       setTimeout(() => {
-        if (mutations[2].type === "childList") {
+        if (mutations[3].type === "childList") {
           if (
             parseInt(
-              mutations[2].addedNodes[1].childNodes[1].firstElementChild
+              mutations[3].addedNodes[1].childNodes[1].firstElementChild
                 .innerText
             ) > this.attackCount
           ) {
@@ -348,7 +348,7 @@ class AttackDodger {
             this.getListOfAttacks();
           } else if (
             parseInt(
-              mutations[2].addedNodes[1].childNodes[1].firstElementChild
+              mutations[3.addedNodes[1].childNodes[1].firstElementChild
                 .innerText
             ) < this.attackCount
           ) {
