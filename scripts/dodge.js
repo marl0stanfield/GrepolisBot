@@ -333,6 +333,7 @@ class AttackDodger {
       console.log("Attack count: " + this.attackCount);
     }
 
+    const mutations
     const mutationObserver = new MutationObserver((mutations) => {
       setTimeout(() => {
         if (mutations[2].type === "childList") {
